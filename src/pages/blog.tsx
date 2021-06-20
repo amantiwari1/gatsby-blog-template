@@ -1,17 +1,38 @@
 import * as React from "react"
-import { Link, graphql } from "gatsby"
+import { Link, graphql, PageProps } from "gatsby"
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 
-const BlogIndex = ({ data, location }) => {
+type DataProps = {
+  site: {
+    siteMetadata: {
+      title: string
+    }
+  }
+  allMarkdownRemark: {
+    nodes: {
+      excerpt: string
+      fields: {
+        slug: string
+      }
+      frontmatter: {
+        date: string
+        title: string
+        description: string
+      }
+    }[]
+  }
+}
+
+const BlogIndex: React.FC<PageProps<DataProps>> = ({ data }) => {
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const posts = data.allMarkdownRemark.nodes
 
   if (posts.length === 0) {
     return (
-      <Layout location={location} title={siteTitle}>
+      <Layout>
         <Seo title="All posts" />
         <Bio />
         <p>
@@ -24,7 +45,7 @@ const BlogIndex = ({ data, location }) => {
   }
 
   return (
-    <Layout location={location} title={siteTitle}>
+    <Layout>
       <Seo title="All posts" />
       <Bio />
       <ol style={{ listStyle: `none` }}>
